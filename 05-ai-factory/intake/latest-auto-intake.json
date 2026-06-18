@@ -1,0 +1,24 @@
+{
+  "intake_id": "AUTO-2026-06-19-AP-INVOICE-FIELD-REVIEW",
+  "project": "HKC Modernization",
+  "submitted_by": "Agent from user request",
+  "submitted_date": "2026-06-19",
+  "description": "User requested Auto Wiki Intake for \u5904\u7406 HKC wiki inbox\uff0c\u4e3b\u9898\u662f AP invoice field review.",
+  "request": "\u5904\u7406 HKC wiki inbox\uff0c\u4e3b\u9898\u662f AP invoice field review",
+  "materials": [
+    {
+      "material_id": "INBOX-001",
+      "source_path": "05-ai-factory/inbox/sample-data-field-note.md",
+      "material_type": "legacy_file_field_list",
+      "owner": "Inbox",
+      "purpose": "Auto-discovered inbox material for \u5904\u7406 HKC wiki inbox\uff0c\u4e3b\u9898\u662f AP invoice field review."
+    },
+    {
+      "material_id": "INBOX-002",
+      "source_path": "05-ai-factory/inbox/sample-legacy-program-note.md",
+      "material_type": "legacy_summary_note",
+      "owner": "Inbox",
+      "purpose": "Auto-discovered inbox material for \u5904\u7406 HKC wiki inbox\uff0c\u4e3b\u9898\u662f AP invoice field review."
+    }
+  ]
+}

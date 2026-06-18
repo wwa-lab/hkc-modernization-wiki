@@ -1,34 +1,52 @@
 # Scripts
 
-This directory contains the MVP script flow for the foundation baseline.
+This directory contains local MVP scripts.
 
-- `process_intake.py` - read intake JSON files and prepare normalized review candidates.
-- `generate_review_pack.py` - generate Markdown SME Review Packs from intake candidates.
-- `review_candidates.py` - review candidate items with keyboard selection and write reviewed Markdown.
-- `apply_reviewed_pack.py` - apply accepted or corrected reviewed results to JSON dictionaries and mapping candidates.
-- `validate_repo.py` - validate repository structure, JSON syntax, review-pack formatting, and required fields.
+- `process_intake.py` - default Auto Wiki Intake: read intake JSON or scan inbox, classify materials, update wiki notes, source index, questions/conflicts, and intake summary.
+- `query_wiki.py` - answer natural language questions from `03-wiki/` and `source-document-index.json` with source pages and source materials.
+- `generate_review_pack.py` - optional selective SME Review Pack generation from candidate logs.
+- `review_candidates.py` - optional terminal review for selected candidate items.
+- `apply_reviewed_pack.py` - optional application of SME-confirmed reviewed results to JSON dictionaries and reports.
+- `validate_repo.py` - validate repository structure, JSON syntax, wiki files, source index, reports, review-pack formatting, and status rules.
 
 The MVP uses only the Python standard library. It does not use Excel, pandas,
 openpyxl, a database, a web framework, real LAN folder reads, or a real LLM API.
 
-## Windows MVP Flow
+## Windows Main Flow
 
 ```bat
-py -3 05-ai-factory\scripts\process_intake.py --intake 05-ai-factory\intake\sample-intake.json
-
-py -3 05-ai-factory\scripts\generate_review_pack.py --intake HKC-INTAKE-SAMPLE-001
-
-py -3 05-ai-factory\scripts\review_candidates.py --intake HKC-INTAKE-SAMPLE-001
-
-py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md
-
+py -3 05-ai-factory\scripts\process_intake.py --request "处理 HKC wiki inbox，主题是 AP invoice field review"
 py -3 05-ai-factory\scripts\validate_repo.py
 ```
 
-For an interactive review output, apply the generated file instead:
+The natural language request is converted to
+`05-ai-factory\intake\latest-auto-intake.json`.
+
+Explicit intake JSON remains supported:
 
 ```bat
-py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\HKC-INTAKE-SAMPLE-001-interactive-reviewed-pack.md
+py -3 05-ai-factory\scripts\process_intake.py --intake 05-ai-factory\intake\sample-wiki-intake.json
+py -3 05-ai-factory\scripts\validate_repo.py
+```
+
+## Windows Query Flow
+
+```bat
+py -3 05-ai-factory\scripts\query_wiki.py --query "总结 AP invoice 相关知识，列出 source 和 open questions"
+```
+
+The query helper reads `03-wiki\index.md`, wiki pages, and
+`07-references\source-document-index.json` only.
+
+## Optional Selective SME Review
+
+Use only for low-confidence items, conflicts, critical programs, key business
+fields, and important open questions.
+
+```bat
+py -3 05-ai-factory\scripts\generate_review_pack.py --intake HKC-WIKI-INTAKE-SAMPLE-001
+py -3 05-ai-factory\scripts\review_candidates.py --intake HKC-WIKI-INTAKE-SAMPLE-001
+py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md
 ```
 
 Preview without writing outputs:
@@ -37,26 +55,17 @@ Preview without writing outputs:
 py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md --dry-run
 ```
 
-Create backups before writing outputs:
+## Main Outputs
 
-```bat
-py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md --backup
-```
-
-## Outputs
-
-- Candidates JSON: `05-ai-factory\logs\<intake_id>-candidates.json`
-- SME Review Pack: `05-ai-factory\review-packs\<intake_id>-sme-review-pack.md`
-- Interactive reviewed pack: `05-ai-factory\reviewed\<intake_id>-interactive-reviewed-pack.md`
-- Program dictionary updates: `03-dictionaries\legacy-programs.json`
-- Field dictionary updates: `03-dictionaries\legacy-fields.json`
-- Open questions: `06-reports\latest-open-question-report.md`
-- Review log: `06-reports\latest-review-status-report.md`
+- Wiki notes: `03-wiki\`
+- Source index: `07-references\source-document-index.json`
+- Intake summary: `06-reports\latest-intake-summary.md`
+- Open questions: `03-wiki\questions\open-questions.md`
+- Conflicts: `03-wiki\questions\conflict-log.md`
+- Optional candidates JSON: `05-ai-factory\logs\<intake_id>-candidates.json`
 
 ## Tests
 
 ```bat
 py -3 -m unittest discover -s 05-ai-factory\tests
 ```
-
-The foundation phase still does not implement complex RPG, BRD, or source-document extraction logic. Future scripts should keep JSON and Markdown formats simple until the real integration phase begins.

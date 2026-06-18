@@ -1,4 +1,4 @@
-"""Validate the MVP repository flow artifacts."""
+"""Validate repository artifacts for Auto Wiki Intake and optional SME review."""
 
 from __future__ import annotations
 
@@ -10,7 +10,55 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[2]
-VALID_REVIEW_STATUSES = {"Draft", "Pending Review", "SME Reviewed", "SME Confirmed", "Need Discussion"}
+VALID_REVIEW_STATUSES = {
+    "Draft",
+    "Pending Review",
+    "AI Organized",
+    "Human Touched",
+    "SME Corrected",
+    "SME Reviewed",
+    "SME Confirmed",
+    "Need Clarification",
+    "Need Discussion",
+    "Conflict",
+    "Deprecated",
+    "Rejected / Not Applicable",
+}
+REQUIRED_WIKI_FILES = [
+    ROOT / "03-wiki" / "README.md",
+    ROOT / "03-wiki" / "index.md",
+    ROOT / "03-wiki" / "log.md",
+    ROOT / "03-wiki" / "overview" / "README.md",
+    ROOT / "03-wiki" / "overview" / "project-background.md",
+    ROOT / "03-wiki" / "overview" / "scope-reference.md",
+    ROOT / "03-wiki" / "overview" / "system-overview.md",
+    ROOT / "03-wiki" / "overview" / "program-notes.md",
+    ROOT / "03-wiki" / "legacy" / "README.md",
+    ROOT / "03-wiki" / "legacy" / "file-notes.md",
+    ROOT / "03-wiki" / "legacy" / "batch-flow-notes.md",
+    ROOT / "03-wiki" / "legacy" / "interface-notes.md",
+    ROOT / "03-wiki" / "modernization" / "README.md",
+    ROOT / "03-wiki" / "modernization" / "engineering-principles.md",
+    ROOT / "03-wiki" / "modernization" / "sdd-working-notes.md",
+    ROOT / "03-wiki" / "modernization" / "migration-patterns.md",
+    ROOT / "03-wiki" / "modernization" / "technical-decisions.md",
+    ROOT / "03-wiki" / "data" / "README.md",
+    ROOT / "03-wiki" / "data" / "data-dictionary-notes.md",
+    ROOT / "03-wiki" / "data" / "field-meaning-notes.md",
+    ROOT / "03-wiki" / "data" / "code-value-notes.md",
+    ROOT / "03-wiki" / "questions" / "README.md",
+    ROOT / "03-wiki" / "questions" / "open-questions.md",
+    ROOT / "03-wiki" / "questions" / "conflict-log.md",
+]
+REQUIRED_FRONTMATTER_FIELDS = [
+    "page_type",
+    "domain",
+    "status",
+    "last_updated",
+    "source_count",
+    "confidence",
+    "related_sources",
+]
 DICTIONARY_REQUIRED_FIELDS = {
     "legacy-programs.json": [
         "program_id",
@@ -118,6 +166,8 @@ def validate_candidate_logs(errors: list[str]) -> int:
             checked += 1
             if item.get("review_status") not in VALID_REVIEW_STATUSES:
                 errors.append(f"{path}: invalid candidate review_status for {item.get('item_id')}")
+            if item.get("review_status") == "SME Confirmed" and "mock extraction" in str(data.get("created_from", "")):
+                errors.append(f"{path}: AI-generated candidate defaults to SME Confirmed")
     return checked
 
 
@@ -186,6 +236,7 @@ def parse_selected_alternative(value: str) -> int | None:
 
 def validate_reports(errors: list[str]) -> int:
     required_reports = [
+        ROOT / "06-reports" / "latest-intake-summary.md",
         ROOT / "06-reports" / "latest-open-question-report.md",
         ROOT / "06-reports" / "latest-review-status-report.md",
     ]
@@ -197,6 +248,65 @@ def validate_reports(errors: list[str]) -> int:
             continue
         if not path.read_text(encoding="utf-8").strip():
             errors.append(f"{path}: required report is empty")
+    return checked
+
+
+def validate_wiki(errors: list[str]) -> int:
+    checked = 0
+    for path in REQUIRED_WIKI_FILES:
+        checked += 1
+        if not path.exists():
+            errors.append(f"{path}: required wiki file is missing")
+            continue
+        content = path.read_text(encoding="utf-8")
+        if not content.strip():
+            errors.append(f"{path}: required wiki file is empty")
+        if not content.startswith("---\n"):
+            errors.append(f"{path}: missing frontmatter")
+        else:
+            frontmatter_end = content.find("\n---\n", 4)
+            frontmatter = content[:frontmatter_end] if frontmatter_end != -1 else content
+            for field in REQUIRED_FRONTMATTER_FIELDS:
+                if f"{field}:" not in frontmatter:
+                    errors.append(f"{path}: frontmatter missing field: {field}")
+        if "- Status: SME Confirmed" in content and "SME explicit" not in content:
+            errors.append(f"{path}: wiki note appears to default to SME Confirmed")
+    index_path = ROOT / "03-wiki" / "index.md"
+    if index_path.exists():
+        index_content = index_path.read_text(encoding="utf-8")
+        if "| Page | Purpose | Status | Last Updated | Source Count |" not in index_content:
+            errors.append(f"{index_path}: missing wiki index table")
+    log_path = ROOT / "03-wiki" / "log.md"
+    if log_path.exists():
+        log_content = log_path.read_text(encoding="utf-8")
+        if "## [" not in log_content or "ingest |" not in log_content:
+            errors.append(f"{log_path}: missing parseable operation log entry")
+    return checked
+
+
+def validate_source_index(errors: list[str]) -> int:
+    path = ROOT / "07-references" / "source-document-index.json"
+    if not path.exists():
+        errors.append(f"{path}: source index is missing")
+        return 0
+    data = load_json(path)
+    if not isinstance(data, list):
+        errors.append(f"{path}: top-level JSON must be an array")
+        return 0
+    checked = 0
+    required_fields = ["material_id", "source_path", "material_type", "intake_id", "wiki_status", "confidence"]
+    for index, item in enumerate(data, start=1):
+        checked += 1
+        if not isinstance(item, dict):
+            errors.append(f"{path}[{index}]: source index item must be an object")
+            continue
+        missing = [field for field in required_fields if not item.get(field)]
+        if missing:
+            errors.append(f"{path}[{index}]: missing required field(s): {', '.join(missing)}")
+        if item.get("wiki_status") == "SME Confirmed":
+            errors.append(f"{path}[{index}]: AI source index entry must not default to SME Confirmed")
+        if item.get("wiki_status") not in VALID_REVIEW_STATUSES:
+            errors.append(f"{path}[{index}]: invalid wiki_status: {item.get('wiki_status')}")
     return checked
 
 
@@ -222,6 +332,8 @@ def main() -> int:
     candidate_count = validate_candidate_logs(errors)
     review_item_count = validate_review_packs(errors)
     report_count = validate_reports(errors)
+    wiki_count = validate_wiki(errors)
+    source_index_count = validate_source_index(errors)
 
     print("Validation Summary")
     print(f"- JSON files checked: {json_count}")
@@ -229,6 +341,8 @@ def main() -> int:
     print(f"- Candidate items checked: {candidate_count}")
     print(f"- Markdown review items checked: {review_item_count}")
     print(f"- Reports checked: {report_count}")
+    print(f"- Wiki files checked: {wiki_count}")
+    print(f"- Source index entries checked: {source_index_count}")
 
     if errors:
         print("- Result: FAILED")

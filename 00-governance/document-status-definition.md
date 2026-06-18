@@ -1,43 +1,54 @@
 # Document Status Definition
 
-## Draft
+These statuses apply to wiki notes, dictionaries, review artifacts, source
+indexes, and modernization knowledge records.
 
-Initial content exists but has not been reviewed.
+## AI Organized
 
-## AI Candidate
+Content was generated, classified, summarized, or organized by AI from intake
+metadata or source references.
 
-Content was generated or organized by AI and requires SME or engineering review.
+This is the default status for Auto Wiki Intake output.
 
-## Pending Review
+AI Organized content must not be treated as SME confirmed.
 
-The item is waiting for SME review.
+## Human Touched
 
-## SME Reviewed
+A non-SME human edited, curated, reformatted, or clarified the content.
 
-The SME reviewed the content and accepted, corrected, or rejected the item.
+Human Touched does not mean SME confirmed.
+
+## SME Corrected
+
+The SME supplied a correction or replacement explanation.
+
+Use this when the correction needs to be preserved distinctly before final
+confirmation status is applied.
 
 ## SME Confirmed
 
-The SME explicitly accepted the AI Recommended Answer, selected an alternative answer, or provided a corrected answer.
+The SME explicitly accepted, selected, or corrected the item.
 
-AI-generated content must never be marked as SME Confirmed without explicit SME action.
+AI-generated content must never be marked as `SME Confirmed` without explicit
+SME action.
 
-## Need Discussion
+## Need Clarification
 
-The SME indicated that the item requires discussion or more evidence. Do not write this item to final dictionaries or mappings.
+The item needs more context, more evidence, or a business/technical discussion.
 
-## Rejected / Not Applicable
+This status is a trigger for optional selective SME review when the item is
+important enough.
 
-The SME rejected the item or marked it as not applicable. Do not write this item to final dictionaries or mappings.
+## Conflict
 
-## Engineering Reviewed
+Source materials disagree or the AI found contradictory meanings, ownership,
+usage, timing, or evidence.
 
-The engineering team reviewed the item for repository consistency, format, and traceability.
+Conflict items should be logged and considered for optional selective SME review.
 
-## Approved
+## Deprecated
 
-The item is ready to be used as a baseline modernization reference.
+The item is no longer current or has been superseded by newer reviewed content.
 
-## Superseded
-
-The item has been replaced by newer reviewed content.
+Deprecated content should remain traceable when it explains why older notes or
+decisions changed.

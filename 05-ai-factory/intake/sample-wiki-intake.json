@@ -1,0 +1,30 @@
+{
+  "intake_id": "HKC-WIKI-INTAKE-SAMPLE-001",
+  "project": "HKC Modernization",
+  "submitted_by": "Engineering Team",
+  "submitted_date": "2026-06-18",
+  "description": "Sample intake manifest for Auto Wiki Intake into the LLM wiki repository.",
+  "materials": [
+    {
+      "material_id": "WIKI-MAT-SAMPLE-001",
+      "source_path": "05-ai-factory/inbox/sample-legacy-program-note.md",
+      "material_type": "legacy_summary_note",
+      "owner": "SME",
+      "purpose": "Capture concise program and RPGLE context for wiki notes."
+    },
+    {
+      "material_id": "WIKI-MAT-SAMPLE-002",
+      "source_path": "05-ai-factory/inbox/sample-data-field-note.md",
+      "material_type": "legacy_file_field_list",
+      "owner": "Tech",
+      "purpose": "Capture field and code value notes for wiki intake."
+    },
+    {
+      "material_id": "WIKI-MAT-SAMPLE-003",
+      "source_path": "\\\\LAN\\HKC\\Discovery\\Legacy_Interface_List.txt",
+      "material_type": "interface_note",
+      "owner": "Tech",
+      "purpose": "Reference LAN interface material without copying the raw source."
+    }
+  ]
+}

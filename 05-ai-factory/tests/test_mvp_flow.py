@@ -32,6 +32,7 @@ def load_script(name: str):
 class MvpFlowTests(unittest.TestCase):
     def setUp(self) -> None:
         self.process_intake = load_script("process_intake")
+        self.query_wiki = load_script("query_wiki")
         self.generate_review_pack = load_script("generate_review_pack")
         self.apply_reviewed_pack = load_script("apply_reviewed_pack")
         self.sample_intake = self.process_intake.load_json(
@@ -65,7 +66,34 @@ class MvpFlowTests(unittest.TestCase):
         }
         for item in candidates:
             self.assertTrue(required_fields.issubset(item), item["item_id"])
-            self.assertEqual("Pending Review", item["review_status"])
+            self.assertIn(item["review_status"], {"AI Organized", "Need Clarification"})
+
+    def test_build_intake_from_natural_language_request(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir_name:
+            inbox_dir = Path(temp_dir_name)
+            inbox_file = inbox_dir / "ap-field-note.md"
+            inbox_file.write_text("- Field APPSTS appears in AP invoice status notes.\n", encoding="utf-8")
+
+            intake = self.process_intake.build_intake_from_request(
+                "处理 HKC wiki inbox，主题是 AP invoice field review",
+                inbox_dir,
+            )
+
+            self.assertTrue(intake["intake_id"].startswith("AUTO-"))
+            self.assertEqual("Agent from user request", intake["submitted_by"])
+            self.assertIn("AP invoice field review", intake["description"])
+            self.assertEqual(1, len(intake["materials"]))
+            self.assertEqual("INBOX-001", intake["materials"][0]["material_id"])
+            self.assertEqual("legacy_file_field_list", intake["materials"][0]["material_type"])
+
+            lan_intake = self.process_intake.build_intake_from_request(
+                "把 LAN AP field list ingest 到 wiki，主题是 AP fields",
+                inbox_dir,
+                ["\\\\LAN\\HKC\\Discovery\\AP_Field_List.txt"],
+            )
+
+            self.assertEqual("REQ-SOURCE-001", lan_intake["materials"][0]["material_id"])
+            self.assertEqual("\\\\LAN\\HKC\\Discovery\\AP_Field_List.txt", lan_intake["materials"][0]["source_path"])
 
     def test_generate_review_pack_contains_required_sme_fields(self) -> None:
         candidate_pack = self.process_intake.build_candidates(self.sample_intake)
@@ -92,6 +120,16 @@ class MvpFlowTests(unittest.TestCase):
             self.assertIn(f"- {label}:", markdown)
         self.assertIn("- A: Accept AI Recommended Answer", markdown)
         self.assertIn("- E: Not Applicable / Not Correct", markdown)
+
+    def test_query_wiki_answers_from_wiki_and_source_index(self) -> None:
+        answer = self.query_wiki.answer_query("CUSTNO field meaning", ROOT, limit=5)
+
+        self.assertIn("# Wiki Query Answer", answer)
+        self.assertIn("Scope: `03-wiki/` and `07-references/source-document-index.json` only", answer)
+        self.assertIn("CUSTNO", answer)
+        self.assertIn("Source Pages", answer)
+        self.assertIn("Source Materials", answer)
+        self.assertIn("Open Questions / Conflicts", answer)
 
     def test_apply_reviewed_pack_routes_options_to_dictionaries_and_reports(self) -> None:
         reviewed_pack = ROOT / "05-ai-factory" / "reviewed" / "sample-reviewed-pack.md"

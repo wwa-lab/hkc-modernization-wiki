@@ -1,237 +1,121 @@
-# AI Factory Demo Runbook
+# AI Factory Runbook
 
-This runbook demonstrates the MVP script flow from sample intake to validated
-dictionary/report updates.
+This runbook demonstrates the MVP Auto Wiki Intake flow.
 
 The demo is intentionally local and lightweight:
 
 - Python standard library only
-- Markdown for SME review packs
-- JSON for machine-readable data
+- Markdown for wiki pages, prompts, reports, and optional SME review packs
+- JSON for metadata, dictionaries, and indexes
 - No Excel, pandas, openpyxl, database, Web UI, real LLM API, or real LAN folder read
 - No complex RPG or BRD parsing
 
-## Demo Flow
+## Main Workflow
 
 ```text
-sample-intake.json
+sample-wiki-intake.json
 -> process_intake.py
--> candidates JSON
--> generate_review_pack.py
--> Markdown SME Review Pack
--> reviewed Markdown
--> apply_reviewed_pack.py
--> dictionaries / reports
--> validate_repo.py
+-> auto classification
+-> 03-wiki Markdown notes
+-> 07-references/source-document-index.json
+-> 03-wiki/questions/open-questions.md
+-> 03-wiki/questions/conflict-log.md
+-> 06-reports/latest-intake-summary.md
 ```
 
-## macOS Commands
-
-Run from the repository root.
-
-```bash
-python3 05-ai-factory/scripts/process_intake.py --intake 05-ai-factory/intake/sample-intake.json
-
-python3 05-ai-factory/scripts/generate_review_pack.py --intake HKC-INTAKE-SAMPLE-001
-
-python3 05-ai-factory/scripts/review_candidates.py --intake HKC-INTAKE-SAMPLE-001
-
-python3 05-ai-factory/scripts/apply_reviewed_pack.py --reviewed-pack 05-ai-factory/reviewed/HKC-INTAKE-SAMPLE-001-interactive-reviewed-pack.md
-
-python3 05-ai-factory/scripts/validate_repo.py
-```
-
-To use the prebuilt reviewed sample instead of the interactive reviewer:
-
-```bash
-python3 05-ai-factory/scripts/apply_reviewed_pack.py --reviewed-pack 05-ai-factory/reviewed/sample-reviewed-pack.md
-```
-
-## Windows Commands
-
-Run from the repository root.
+Windows:
 
 ```bat
-py -3 05-ai-factory\scripts\process_intake.py --intake 05-ai-factory\intake\sample-intake.json
-
-py -3 05-ai-factory\scripts\generate_review_pack.py --intake HKC-INTAKE-SAMPLE-001
-
-py -3 05-ai-factory\scripts\review_candidates.py --intake HKC-INTAKE-SAMPLE-001
-
-py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\HKC-INTAKE-SAMPLE-001-interactive-reviewed-pack.md
-
+py -3 05-ai-factory\scripts\process_intake.py --request "处理 HKC wiki inbox，主题是 AP invoice field review"
 py -3 05-ai-factory\scripts\validate_repo.py
 ```
 
-## Safe Apply Options
+The natural language request writes
+`05-ai-factory\intake\latest-auto-intake.json` before running intake.
 
-Preview a reviewed pack without writing dictionaries or reports:
-
-```bash
-python3 05-ai-factory/scripts/apply_reviewed_pack.py --reviewed-pack 05-ai-factory/reviewed/sample-reviewed-pack.md --dry-run
-```
-
-Windows:
+Explicit intake JSON:
 
 ```bat
-py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md --dry-run
+py -3 05-ai-factory\scripts\process_intake.py --intake 05-ai-factory\intake\sample-wiki-intake.json
+py -3 05-ai-factory\scripts\validate_repo.py
 ```
 
-Create a timestamped backup before writing outputs:
-
-```bash
-python3 05-ai-factory/scripts/apply_reviewed_pack.py --reviewed-pack 05-ai-factory/reviewed/sample-reviewed-pack.md --backup
-```
-
-Backups are written under:
-
-```text
-05-ai-factory/backups/<timestamp>/
-```
-
-To use the prebuilt reviewed sample instead of the interactive reviewer:
+Optional inbox scan:
 
 ```bat
-py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md
+py -3 05-ai-factory\scripts\process_intake.py --inbox 05-ai-factory\inbox
 ```
 
-## Review Options
+Explicit LAN source reference:
 
-The reviewed Markdown supports five SME choices:
-
-- A: Accept AI Recommended Answer
-- B: Choose Alternative Answer
-- C: Provide Corrected Answer
-- D: Need Discussion
-- E: Not Applicable / Not Correct
-
-Only A, B, and C write dictionary entries. D writes to the open question report.
-E writes to the review log and is excluded from dictionaries.
-
-## Terminal Interactive Review
-
-Use this when an SME wants a choice-based terminal experience.
-
-```bash
-python3 05-ai-factory/scripts/review_candidates.py --intake HKC-INTAKE-SAMPLE-001
+```bat
+py -3 05-ai-factory\scripts\process_intake.py --request "把 LAN AP field list ingest 到 wiki，主题是 AP fields" --source "\\LAN\HKC\Discovery\AP_Field_List.txt"
 ```
 
-Keyboard behavior:
+## Query Flow
 
-- Up/Down moves the selected option
-- Enter confirms the selected option
-- A/B/C/D/E are shortcuts
-- B opens an alternative-answer picker
-- C prompts for a corrected answer
-- Each item prompts for an SME comment
+Ask from the wiki after intake:
 
-Output:
-
-```text
-05-ai-factory/reviewed/HKC-INTAKE-SAMPLE-001-interactive-reviewed-pack.md
+```bat
+py -3 05-ai-factory\scripts\query_wiki.py --query "总结 AP invoice 相关知识，列出 source 和 open questions"
 ```
 
-## Copilot Chat Review
-
-Use this when reviewing inside VS Code with GitHub Copilot Chat.
-
-1. Open `05-ai-factory/review-packs/HKC-INTAKE-SAMPLE-001-sme-review-pack.md`.
-2. Ask Copilot Chat to guide the SME one item at a time.
-3. Answer with A/B/C/D/E.
-4. Save the final reviewed Markdown under `05-ai-factory/reviewed/`.
-5. Apply the reviewed pack with `apply_reviewed_pack.py`.
-
-Suggested Copilot Chat prompt:
-
-```text
-Please guide me through the currently open SME Review Pack one item at a time.
-
-For each item, show the legacy object, AI recommended answer, evidence,
-confidence, alternatives, and A/B/C/D/E options.
-
-Wait for my answer before moving to the next item.
-If I choose B, ask which alternative number I select.
-If I choose C, ask me for the corrected answer.
-Do not ask about JSON, Git, APIs, Java services, target architecture, or domain models.
-
-At the end, output a complete reviewed Markdown pack with SME Selected Option,
-SME Selected Alternative, SME Corrected Answer, SME Comment, and Review Status.
-```
+The query helper answers only from `03-wiki/` and
+`07-references/source-document-index.json`. It reports source pages, source
+materials, confidence, open questions, and conflicts.
 
 ## Expected Outputs
 
-- Candidates JSON:
-  `05-ai-factory/logs/HKC-INTAKE-SAMPLE-001-candidates.json`
-- Generated SME Review Pack:
-  `05-ai-factory/review-packs/HKC-INTAKE-SAMPLE-001-sme-review-pack.md`
-- Interactive reviewed pack:
-  `05-ai-factory/reviewed/HKC-INTAKE-SAMPLE-001-interactive-reviewed-pack.md`
-- Program dictionary:
-  `03-dictionaries/legacy-programs.json`
-- Field dictionary:
-  `03-dictionaries/legacy-fields.json`
-- Open question report:
-  `06-reports/latest-open-question-report.md`
-- Review status report:
-  `06-reports/latest-review-status-report.md`
+- Wiki notes under `03-wiki/`
+- Open questions under `03-wiki/questions/open-questions.md`
+- Conflicts under `03-wiki/questions/conflict-log.md`
+- Source index at `07-references/source-document-index.json`
+- Intake summary at `06-reports/latest-intake-summary.md`
+- Optional SME candidate log under `05-ai-factory/logs/`
+
+## Optional Selective SME Review
+
+The directories below are retained for selective review, not the default path:
+
+- `05-ai-factory/review-packs/`
+- `05-ai-factory/reviewed/`
+- `05-ai-factory/prompts/sme-review-chat.md`
+- `05-ai-factory/scripts/generate_review_pack.py`
+- `05-ai-factory/scripts/apply_reviewed_pack.py`
+- `05-ai-factory/scripts/review_candidates.py`
+
+Use optional SME review only for low-confidence items, conflicts, critical
+programs, key business fields, and important open questions.
+
+Windows optional review commands:
+
+```bat
+py -3 05-ai-factory\scripts\generate_review_pack.py --intake HKC-WIKI-INTAKE-SAMPLE-001
+py -3 05-ai-factory\scripts\review_candidates.py --intake HKC-WIKI-INTAKE-SAMPLE-001
+py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md
+```
+
+Only explicit SME action may produce `SME Confirmed`. Auto Wiki Intake defaults
+to `AI Organized`.
 
 ## Validation
 
-Run validation after applying a reviewed pack.
-
-```bash
-python3 05-ai-factory/scripts/validate_repo.py
-```
-
-Expected result:
-
-```text
-Validation Summary
-- Result: PASSED
-```
-
-The validator checks JSON syntax, dictionary required fields, review statuses,
-review pack required fields, B alternative selections, duplicate dictionary keys,
-and required report files.
-
-## Automated Tests
-
-The MVP regression tests use Python standard library `unittest`.
-
-macOS:
-
-```bash
-python3 -m unittest discover -s 05-ai-factory/tests
-```
-
-Windows:
+Run validation after intake:
 
 ```bat
-py -3 -m unittest discover -s 05-ai-factory\tests
+py -3 05-ai-factory\scripts\validate_repo.py
 ```
 
-## Troubleshooting
-
-If `generate_review_pack.py` cannot find candidates, run `process_intake.py`
-first.
-
-If `apply_reviewed_pack.py` fails on option B, check that the reviewed Markdown
-contains a numeric `SME Selected Alternative`, such as `2`.
-
-If option C fails, check that `SME Corrected Answer` is not blank or `TBD`.
-
-If the terminal review display looks wrong, widen the terminal window and rerun
-`review_candidates.py`. The script wraps text based on terminal width.
-
-If validation fails, read the listed file and line context in the validation
-message, fix the reviewed Markdown or JSON output, then rerun validation.
+The validator checks JSON syntax, wiki folders, required reports, source index
+shape, review statuses, and that AI wiki notes are not defaulted to
+`SME Confirmed`.
 
 ## Next-Phase Gaps
 
-These are intentionally out of scope for the MVP demo:
+These remain intentionally out of scope:
 
 - real LAN folder integration
 - real LLM extraction
-- real RPG scan parsing
-- Copilot Chat actual SME facilitation hardening
+- RPG / BRD parsing
 - target mapping / SDD generation
+- Web UI, Excel, pandas, openpyxl, or databases
