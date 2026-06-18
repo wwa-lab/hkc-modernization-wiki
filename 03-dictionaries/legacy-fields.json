@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "file": "UNKNOWN",
+    "field": "CUSTNO",
+    "item_id": "SME-ITEM-002",
+    "legacy_object": "CUSTNO",
+    "description": "Ship-to customer number.",
+    "ai_recommended_answer": "`CUSTNO` is the customer number field used to identify the customer associated with an order or account record.",
+    "sme_selected_option": "B",
+    "sme_comment": "This item is ship-to specific for the sampled source.",
+    "source_evidence": [
+      "Source material: MAT-SAMPLE-001",
+      "Observed terms: CUSTOMER FILE, ORDER HEADER, CUSTNO"
+    ],
+    "confidence": "High",
+    "review_status": "SME Confirmed",
+    "sme_selected_alternative": "2",
+    "source_material_ids": [
+      "MAT-SAMPLE-001",
+      "MAT-SAMPLE-002"
+    ],
+    "review_source": "SME-PACK-HKC-INTAKE-SAMPLE-001",
+    "intake_id": "HKC-INTAKE-SAMPLE-001",
+    "last_updated": "2026-06-18"
+  },
+  {
+    "file": "UNKNOWN",
+    "field": "BILLNO",
+    "item_id": "SME-ITEM-005",
+    "legacy_object": "BILLNO",
+    "description": "`BILLNO` is the billing document sequence number used on invoice records.",
+    "ai_recommended_answer": "`BILLNO` is likely a billing reference number for customer invoice activity.",
+    "sme_selected_option": "C",
+    "sme_selected_alternative": "",
+    "sme_comment": "Confirmed by billing team sample terminology.",
+    "source_material_ids": [
+      "MAT-SAMPLE-001",
+      "MAT-SAMPLE-002"
+    ],
+    "source_evidence": [
+      "Source material: MAT-SAMPLE-001",
+      "Observed terms: BILLING, INVOICE, BILLNO"
+    ],
+    "confidence": "Medium",
+    "review_source": "SME-PACK-HKC-INTAKE-SAMPLE-001",
+    "intake_id": "HKC-INTAKE-SAMPLE-001",
+    "last_updated": "2026-06-18",
+    "review_status": "SME Confirmed"
+  }
+]

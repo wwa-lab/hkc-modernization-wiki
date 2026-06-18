@@ -35,6 +35,7 @@
 ### SME Response
 
 - SME Selected Option: Pending Review
+- SME Selected Alternative: TBD
 - SME Corrected Answer: TBD
 - SME Comment: TBD
 - Review Status: Pending Review
@@ -67,6 +68,7 @@
 ### SME Response
 
 - SME Selected Option: Pending Review
+- SME Selected Alternative: TBD
 - SME Corrected Answer: TBD
 - SME Comment: TBD
 - Review Status: Pending Review

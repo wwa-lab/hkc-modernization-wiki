@@ -1,0 +1,127 @@
+{
+  "intake_id": "HKC-INTAKE-SAMPLE-001",
+  "project": "HKC Modernization",
+  "created_from": "mock extraction",
+  "candidates": [
+    {
+      "item_id": "SME-ITEM-001",
+      "type": "Program Review",
+      "legacy_object": "ORDENTR",
+      "ai_recommended_answer": "`ORDENTR` appears to be an order entry program used to create or maintain customer orders.",
+      "why_ai_recommends_this": "The program name resembles order entry, and the mock evidence references order header and detail file usage.",
+      "evidence": [
+        "Source material: MAT-SAMPLE-002",
+        "Observed terms: ORDER HEADER, ORDER DETAIL, ENTRY SCREEN"
+      ],
+      "confidence": "Medium",
+      "alternative_answers": [
+        "Order inquiry screen program.",
+        "Batch order validation program.",
+        "Order maintenance program."
+      ],
+      "question_for_sme": "What is the best description of legacy program `ORDENTR`?",
+      "options": {
+        "A": "Accept AI Recommended Answer",
+        "B": "Choose Alternative Answer",
+        "C": "Provide Corrected Answer",
+        "D": "Need Discussion",
+        "E": "Not Applicable / Not Correct"
+      },
+      "source_material_ids": [
+        "MAT-SAMPLE-001",
+        "MAT-SAMPLE-002"
+      ],
+      "review_status": "Pending Review"
+    },
+    {
+      "item_id": "SME-ITEM-002",
+      "type": "Field Review",
+      "legacy_object": "CUSTNO",
+      "ai_recommended_answer": "`CUSTNO` is the customer number field used to identify the customer associated with an order or account record.",
+      "why_ai_recommends_this": "The field name resembles customer number, and the mock evidence places it near customer and order records.",
+      "evidence": [
+        "Source material: MAT-SAMPLE-001",
+        "Observed terms: CUSTOMER FILE, ORDER HEADER, CUSTNO"
+      ],
+      "confidence": "High",
+      "alternative_answers": [
+        "Billing customer number.",
+        "Ship-to customer number.",
+        "Customer account number used only for reporting."
+      ],
+      "question_for_sme": "What is the correct meaning of field `CUSTNO`?",
+      "options": {
+        "A": "Accept AI Recommended Answer",
+        "B": "Choose Alternative Answer",
+        "C": "Provide Corrected Answer",
+        "D": "Need Discussion",
+        "E": "Not Applicable / Not Correct"
+      },
+      "source_material_ids": [
+        "MAT-SAMPLE-001",
+        "MAT-SAMPLE-002"
+      ],
+      "review_status": "Pending Review"
+    },
+    {
+      "item_id": "SME-ITEM-003",
+      "type": "Program Review",
+      "legacy_object": "PRCADJ",
+      "ai_recommended_answer": "`PRCADJ` may be a pricing adjustment program, but the available mock evidence is incomplete.",
+      "why_ai_recommends_this": "The name suggests price adjustment, yet the mock source does not show enough business context.",
+      "evidence": [
+        "Source material: MAT-SAMPLE-002",
+        "Observed terms: PRICE, ADJUST, MANUAL OVERRIDE"
+      ],
+      "confidence": "Low",
+      "alternative_answers": [
+        "Promotion adjustment program.",
+        "Manual price override screen.",
+        "Obsolete pricing batch utility."
+      ],
+      "question_for_sme": "Does `PRCADJ` require a business discussion before dictionary approval?",
+      "options": {
+        "A": "Accept AI Recommended Answer",
+        "B": "Choose Alternative Answer",
+        "C": "Provide Corrected Answer",
+        "D": "Need Discussion",
+        "E": "Not Applicable / Not Correct"
+      },
+      "source_material_ids": [
+        "MAT-SAMPLE-001",
+        "MAT-SAMPLE-002"
+      ],
+      "review_status": "Pending Review"
+    },
+    {
+      "item_id": "SME-ITEM-004",
+      "type": "Field Review",
+      "legacy_object": "TMPFLAG",
+      "ai_recommended_answer": "`TMPFLAG` appears to be a temporary processing flag and may not represent stable business meaning.",
+      "why_ai_recommends_this": "The mock evidence only shows temporary work-file usage, not a persistent business field.",
+      "evidence": [
+        "Source material: MAT-SAMPLE-001",
+        "Observed terms: WORK FILE, TEMP, TMPFLAG"
+      ],
+      "confidence": "Low",
+      "alternative_answers": [
+        "Internal batch retry flag.",
+        "Temporary UI state flag.",
+        "Obsolete migration-only field."
+      ],
+      "question_for_sme": "Should `TMPFLAG` be excluded from the approved legacy field dictionary?",
+      "options": {
+        "A": "Accept AI Recommended Answer",
+        "B": "Choose Alternative Answer",
+        "C": "Provide Corrected Answer",
+        "D": "Need Discussion",
+        "E": "Not Applicable / Not Correct"
+      },
+      "source_material_ids": [
+        "MAT-SAMPLE-001",
+        "MAT-SAMPLE-002"
+      ],
+      "review_status": "Pending Review"
+    }
+  ]
+}

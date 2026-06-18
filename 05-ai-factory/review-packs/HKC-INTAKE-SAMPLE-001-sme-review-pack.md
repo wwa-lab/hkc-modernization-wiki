@@ -1,14 +1,15 @@
-# Sample Reviewed SME Pack
+# SME Review Pack - HKC-INTAKE-SAMPLE-001
 
 ## Review Pack Metadata
 
 - Pack ID: `SME-PACK-HKC-INTAKE-SAMPLE-001`
 - Intake ID: `HKC-INTAKE-SAMPLE-001`
+- Project: HKC Modernization
 - Source Document References: `MAT-SAMPLE-001`, `MAT-SAMPLE-002`
 - Created Date: 2026-06-18
-- Review Status: SME Reviewed
+- Review Status: Draft
 
-## Reviewed Item 1
+## Review Item 1
 
 - Item ID: `SME-ITEM-001`
 - Type: Program Review
@@ -35,13 +36,13 @@
 
 ### SME Response
 
-- SME Selected Option: A
+- SME Selected Option: Pending Review
 - SME Selected Alternative: TBD
 - SME Corrected Answer: TBD
-- SME Comment: Accepted. This is the main order entry program.
-- Review Status: SME Confirmed
+- SME Comment: TBD
+- Review Status: Pending Review
 
-## Reviewed Item 2
+## Review Item 2
 
 - Item ID: `SME-ITEM-002`
 - Type: Field Review
@@ -68,46 +69,13 @@
 
 ### SME Response
 
-- SME Selected Option: B
-- SME Selected Alternative: 2
-- SME Corrected Answer: TBD
-- SME Comment: This item is ship-to specific for the sampled source.
-- Review Status: SME Confirmed
-
-## Reviewed Item 3
-
-- Item ID: `SME-ITEM-005`
-- Type: Field Review
-- Legacy object: `BILLNO`
-- AI Recommended Answer: `BILLNO` is likely a billing reference number for customer invoice activity.
-- Why AI recommends this: The name resembles billing number, and the mock evidence appears near invoice references.
-- Evidence:
-  - Source material: MAT-SAMPLE-001
-  - Observed terms: BILLING, INVOICE, BILLNO
-- Confidence: Medium
-- Alternative Answers:
-  1. Bill-to customer number.
-  2. Billing document sequence number.
-  3. Obsolete billing work field.
-- Question for SME: What is the correct meaning of field `BILLNO`?
-
-### Options
-
-- A: Accept AI Recommended Answer
-- B: Choose Alternative Answer
-- C: Provide Corrected Answer
-- D: Need Discussion
-- E: Not Applicable / Not Correct
-
-### SME Response
-
-- SME Selected Option: C
+- SME Selected Option: Pending Review
 - SME Selected Alternative: TBD
-- SME Corrected Answer: `BILLNO` is the billing document sequence number used on invoice records.
-- SME Comment: Confirmed by billing team sample terminology.
-- Review Status: SME Confirmed
+- SME Corrected Answer: TBD
+- SME Comment: TBD
+- Review Status: Pending Review
 
-## Reviewed Item 4
+## Review Item 3
 
 - Item ID: `SME-ITEM-003`
 - Type: Program Review
@@ -134,13 +102,13 @@
 
 ### SME Response
 
-- SME Selected Option: D
+- SME Selected Option: Pending Review
 - SME Selected Alternative: TBD
 - SME Corrected Answer: TBD
-- SME Comment: Pricing ownership is unclear. Discuss with Sales Operations before confirming.
-- Review Status: Need Discussion
+- SME Comment: TBD
+- Review Status: Pending Review
 
-## Reviewed Item 5
+## Review Item 4
 
 - Item ID: `SME-ITEM-004`
 - Type: Field Review
@@ -167,8 +135,8 @@
 
 ### SME Response
 
-- SME Selected Option: E
+- SME Selected Option: Pending Review
 - SME Selected Alternative: TBD
 - SME Corrected Answer: TBD
-- SME Comment: Not a business dictionary field. Exclude from approved dictionary.
-- Review Status: SME Reviewed
+- SME Comment: TBD
+- Review Status: Pending Review
