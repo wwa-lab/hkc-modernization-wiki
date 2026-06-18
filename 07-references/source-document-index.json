@@ -1,1 +1,62 @@
-[]
+[
+  {
+    "material_id": "INBOX-001",
+    "source_path": "05-ai-factory/inbox/sample-data-field-note.md",
+    "material_type": "legacy_file_field_list",
+    "owner": "Inbox",
+    "purpose": "Auto-discovered inbox material for \u5904\u7406 HKC wiki inbox\uff0c\u4e3b\u9898\u662f AP invoice field review.",
+    "intake_id": "AUTO-2026-06-19-AP-INVOICE-FIELD-REVIEW",
+    "wiki_area": "questions",
+    "wiki_status": "Need Clarification",
+    "confidence": "Low",
+    "last_indexed": "2026-06-19"
+  },
+  {
+    "material_id": "INBOX-002",
+    "source_path": "05-ai-factory/inbox/sample-legacy-program-note.md",
+    "material_type": "legacy_summary_note",
+    "owner": "Inbox",
+    "purpose": "Auto-discovered inbox material for \u5904\u7406 HKC wiki inbox\uff0c\u4e3b\u9898\u662f AP invoice field review.",
+    "intake_id": "AUTO-2026-06-19-AP-INVOICE-FIELD-REVIEW",
+    "wiki_area": "questions",
+    "wiki_status": "Need Clarification",
+    "confidence": "Low",
+    "last_indexed": "2026-06-19"
+  },
+  {
+    "material_id": "WIKI-MAT-SAMPLE-001",
+    "source_path": "05-ai-factory/inbox/sample-legacy-program-note.md",
+    "material_type": "legacy_summary_note",
+    "owner": "SME",
+    "purpose": "Capture concise program and RPGLE context for wiki notes.",
+    "intake_id": "HKC-WIKI-INTAKE-SAMPLE-001",
+    "wiki_area": "questions",
+    "wiki_status": "Need Clarification",
+    "confidence": "Low",
+    "last_indexed": "2026-06-19"
+  },
+  {
+    "material_id": "WIKI-MAT-SAMPLE-002",
+    "source_path": "05-ai-factory/inbox/sample-data-field-note.md",
+    "material_type": "legacy_file_field_list",
+    "owner": "Tech",
+    "purpose": "Capture field and code value notes for wiki intake.",
+    "intake_id": "HKC-WIKI-INTAKE-SAMPLE-001",
+    "wiki_area": "questions",
+    "wiki_status": "Need Clarification",
+    "confidence": "Low",
+    "last_indexed": "2026-06-19"
+  },
+  {
+    "material_id": "WIKI-MAT-SAMPLE-003",
+    "source_path": "\\\\LAN\\HKC\\Discovery\\Legacy_Interface_List.txt",
+    "material_type": "interface_note",
+    "owner": "Tech",
+    "purpose": "Reference LAN interface material without copying the raw source.",
+    "intake_id": "HKC-WIKI-INTAKE-SAMPLE-001",
+    "wiki_area": "legacy",
+    "wiki_status": "AI Organized",
+    "confidence": "Medium",
+    "last_indexed": "2026-06-19"
+  }
+]
