@@ -1,23 +1,34 @@
 # Scripts
 
-No complex Python scripts are included in this baseline.
-
-Future scripts may include:
+This directory contains the MVP script flow for the foundation baseline.
 
 - `process_intake.py` - read intake JSON files and prepare normalized review candidates.
 - `generate_review_pack.py` - generate Markdown SME Review Packs from intake candidates.
 - `apply_reviewed_pack.py` - apply accepted or corrected reviewed results to JSON dictionaries and mapping candidates.
 - `validate_repo.py` - validate repository structure, JSON syntax, review-pack formatting, and required fields.
 
-Python command examples must use Windows-style `py -3` commands.
+The MVP uses only the Python standard library. It does not use Excel, pandas,
+openpyxl, a database, a web framework, real LAN folder reads, or a real LLM API.
 
-Example:
+## Windows MVP Flow
 
-```powershell
-py -3 05-ai-factory/scripts/validate_repo.py
+```bat
+py -3 05-ai-factory\scripts\process_intake.py --intake 05-ai-factory\intake\sample-intake.json
+
+py -3 05-ai-factory\scripts\generate_review_pack.py --intake HKC-INTAKE-SAMPLE-001
+
+py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md
+
 py -3 05-ai-factory\scripts\validate_repo.py
 ```
 
-Do not use Excel, pandas, openpyxl, a database, or a web framework for the baseline workflow.
+## Outputs
 
-The foundation phase should not implement complex RPG, BRD, or source-document extraction logic. Future scripts should use the Python standard library first and keep JSON and Markdown formats simple.
+- Candidates JSON: `05-ai-factory\logs\<intake_id>-candidates.json`
+- SME Review Pack: `05-ai-factory\review-packs\<intake_id>-sme-review-pack.md`
+- Program dictionary updates: `03-dictionaries\legacy-programs.json`
+- Field dictionary updates: `03-dictionaries\legacy-fields.json`
+- Open questions: `06-reports\latest-open-question-report.md`
+- Review log: `06-reports\latest-review-status-report.md`
+
+The foundation phase still does not implement complex RPG, BRD, or source-document extraction logic. Future scripts should keep JSON and Markdown formats simple until the real integration phase begins.

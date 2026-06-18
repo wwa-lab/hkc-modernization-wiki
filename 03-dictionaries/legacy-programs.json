@@ -1,1 +1,25 @@
-[]
+[
+  {
+    "program_id": "ORDENTR",
+    "item_id": "SME-ITEM-001",
+    "legacy_object": "ORDENTR",
+    "description": "`ORDENTR` appears to be an order entry program used to create or maintain customer orders.",
+    "ai_recommended_answer": "`ORDENTR` appears to be an order entry program used to create or maintain customer orders.",
+    "sme_selected_option": "A",
+    "sme_comment": "Accepted. This is the main order entry program.",
+    "source_evidence": [
+      "Source material: MAT-SAMPLE-002",
+      "Observed terms: ORDER HEADER, ORDER DETAIL, ENTRY SCREEN"
+    ],
+    "confidence": "Medium",
+    "review_status": "SME Confirmed",
+    "sme_selected_alternative": "",
+    "source_material_ids": [
+      "MAT-SAMPLE-001",
+      "MAT-SAMPLE-002"
+    ],
+    "review_source": "SME-PACK-HKC-INTAKE-SAMPLE-001",
+    "intake_id": "HKC-INTAKE-SAMPLE-001",
+    "last_updated": "2026-06-18"
+  }
+]
