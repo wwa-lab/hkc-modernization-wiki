@@ -31,6 +31,18 @@ For an interactive review output, apply the generated file instead:
 py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\HKC-INTAKE-SAMPLE-001-interactive-reviewed-pack.md
 ```
 
+Preview without writing outputs:
+
+```bat
+py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md --dry-run
+```
+
+Create backups before writing outputs:
+
+```bat
+py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory\reviewed\sample-reviewed-pack.md --backup
+```
+
 ## Outputs
 
 - Candidates JSON: `05-ai-factory\logs\<intake_id>-candidates.json`
@@ -40,5 +52,11 @@ py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory
 - Field dictionary updates: `03-dictionaries\legacy-fields.json`
 - Open questions: `06-reports\latest-open-question-report.md`
 - Review log: `06-reports\latest-review-status-report.md`
+
+## Tests
+
+```bat
+py -3 -m unittest discover -s 05-ai-factory\tests
+```
 
 The foundation phase still does not implement complex RPG, BRD, or source-document extraction logic. Future scripts should keep JSON and Markdown formats simple until the real integration phase begins.

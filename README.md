@@ -53,3 +53,10 @@ py -3 05-ai-factory\scripts\validate_repo.py
 This baseline does not implement extraction logic. Future scripts may process intake JSON, generate Markdown review packs, apply reviewed Markdown, and validate repository structure.
 
 Foundation changes are tracked in `CHANGELOG.md`.
+
+## MVP Demo Runbook
+
+The current sample AI factory flow is documented in
+`05-ai-factory/README.md`. It includes macOS and Windows commands, terminal
+interactive review, Copilot Chat review, expected outputs, validation, and
+troubleshooting.

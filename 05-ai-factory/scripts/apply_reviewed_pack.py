@@ -5,7 +5,8 @@ from __future__ import annotations
 import argparse
 import json
 import re
-from datetime import date
+import shutil
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,12 @@ REVIEW_STATUS_PATH = ROOT / "06-reports" / "latest-review-status-report.md"
 VALID_OPTIONS = {"A", "B", "C", "D", "E"}
 CONFIRMED_OPTIONS = {"A", "B", "C"}
 CONFIRMED_STATUS = "SME Confirmed"
+OUTPUT_PATHS = [
+    PROGRAMS_PATH,
+    FIELDS_PATH,
+    OPEN_QUESTIONS_PATH,
+    REVIEW_STATUS_PATH,
+]
 
 
 def load_json_array(path: Path) -> list[dict[str, Any]]:
@@ -32,6 +39,19 @@ def write_json(path: Path, data: Any) -> None:
     with path.open("w", encoding="utf-8", newline="\n") as file:
         json.dump(data, file, indent=2)
         file.write("\n")
+
+
+def backup_outputs(paths: list[Path], backup_dir: Path) -> list[Path]:
+    backup_dir.mkdir(parents=True, exist_ok=True)
+    created = []
+    for path in paths:
+        if not path.exists():
+            continue
+        backup_path = backup_dir / path.relative_to(ROOT)
+        backup_path.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(path, backup_path)
+        created.append(backup_path)
+    return created
 
 
 def strip_ticks(value: str) -> str:
@@ -64,7 +84,7 @@ def parse_field(section: str, label: str) -> str:
     return normalize_value(match.group(1)) if match else ""
 
 
-def parse_metadata(markdown: str) -> dict[str, str]:
+def parse_metadata(markdown: str) -> dict[str, Any]:
     metadata_match = re.search(
         r"^##\s+Review Pack Metadata\s*$([\s\S]*?)(?=^##\s+)",
         markdown,
@@ -280,7 +300,7 @@ def validate_reviewed_item(item: dict[str, Any]) -> None:
         selected_alternative_index(item)
 
 
-def apply_reviewed_pack(path: Path) -> dict[str, int]:
+def build_apply_plan(path: Path) -> dict[str, Any]:
     markdown = path.read_text(encoding="utf-8")
     metadata = parse_metadata(markdown)
     items = parse_sections(markdown)
@@ -311,30 +331,63 @@ def apply_reviewed_pack(path: Path) -> dict[str, int]:
         elif option == "E":
             skipped.append(item)
 
-    write_json(PROGRAMS_PATH, programs)
-    write_json(FIELDS_PATH, fields)
-    OPEN_QUESTIONS_PATH.write_text(render_open_questions(open_questions), encoding="utf-8", newline="\n")
-    REVIEW_STATUS_PATH.write_text(render_review_log(applied, skipped), encoding="utf-8", newline="\n")
-    return {
+    open_questions_markdown = render_open_questions(open_questions)
+    review_log_markdown = render_review_log(applied, skipped)
+    summary = {
         "reviewed_items": len(items),
         "dictionary_updates": inserted_or_updated,
         "open_questions": len(open_questions),
         "not_applicable": len(skipped),
     }
+    return {
+        "summary": summary,
+        "programs": programs,
+        "fields": fields,
+        "open_questions_markdown": open_questions_markdown,
+        "review_log_markdown": review_log_markdown,
+    }
+
+
+def write_apply_plan(plan: dict[str, Any]) -> None:
+    write_json(PROGRAMS_PATH, plan["programs"])
+    write_json(FIELDS_PATH, plan["fields"])
+    OPEN_QUESTIONS_PATH.write_text(plan["open_questions_markdown"], encoding="utf-8", newline="\n")
+    REVIEW_STATUS_PATH.write_text(plan["review_log_markdown"], encoding="utf-8", newline="\n")
+
+
+def apply_reviewed_pack(path: Path, dry_run: bool = False, backup: bool = False) -> dict[str, Any]:
+    plan = build_apply_plan(path)
+    backup_paths: list[Path] = []
+    if not dry_run:
+        if backup:
+            backup_dir = ROOT / "05-ai-factory" / "backups" / datetime.now().strftime("%Y%m%d-%H%M%S")
+            backup_paths = backup_outputs(OUTPUT_PATHS, backup_dir)
+        write_apply_plan(plan)
+    result = {**plan["summary"], "dry_run": dry_run}
+    if backup_paths:
+        result["backup_files"] = [str(path) for path in backup_paths]
+    return result
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Apply reviewed Markdown SME pack.")
     parser.add_argument("--reviewed-pack", required=True, help="Path to reviewed Markdown pack.")
+    parser.add_argument("--dry-run", action="store_true", help="Validate and summarize without writing outputs.")
+    parser.add_argument("--backup", action="store_true", help="Copy current outputs before writing changes.")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    summary = apply_reviewed_pack(Path(args.reviewed_pack))
-    print("Applied reviewed pack")
+    summary = apply_reviewed_pack(Path(args.reviewed_pack), dry_run=args.dry_run, backup=args.backup)
+    print("Dry run reviewed pack" if args.dry_run else "Applied reviewed pack")
     for key, value in summary.items():
-        print(f"- {key}: {value}")
+        if key == "backup_files":
+            print("- backup_files:")
+            for backup_file in value:
+                print(f"  - {backup_file}")
+        else:
+            print(f"- {key}: {value}")
     return 0
 
 
