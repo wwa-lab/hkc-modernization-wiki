@@ -1,0 +1,23 @@
+{
+  "intake_id": "HKC-INTAKE-SAMPLE-001",
+  "project": "HKC Modernization",
+  "submitted_by": "Engineering Team",
+  "submitted_date": "2026-06-18",
+  "description": "Sample intake manifest for legacy dictionary and SME review pack preparation.",
+  "materials": [
+    {
+      "material_id": "MAT-SAMPLE-001",
+      "source_path": "\\\\LAN\\HKC\\Discovery\\Legacy_File_List.txt",
+      "material_type": "legacy_file_field_list",
+      "owner": "SME",
+      "purpose": "Reference legacy files and fields for SME review."
+    },
+    {
+      "material_id": "MAT-SAMPLE-002",
+      "source_path": "\\\\LAN\\HKC\\Scan\\RPG_Scan_Output.md",
+      "material_type": "legacy_scan_output",
+      "owner": "Tech",
+      "purpose": "Reference legacy programs, related files, and candidate program purpose."
+    }
+  ]
+}
