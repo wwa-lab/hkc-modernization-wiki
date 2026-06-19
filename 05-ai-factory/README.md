@@ -2,6 +2,10 @@
 
 This runbook demonstrates the MVP Auto Wiki Intake flow.
 
+For internal testing with real HKC materials, use
+`05-ai-factory/design/real-scenario-test-guideline.md`. A Chinese version is
+available at `05-ai-factory/design/real-scenario-test-guideline.zh-CN.md`.
+
 The demo is intentionally local and lightweight:
 
 - Python standard library only
@@ -72,6 +76,11 @@ materials, confidence, open questions, and conflicts.
 - Source index at `07-references/source-document-index.json`
 - Intake summary at `06-reports/latest-intake-summary.md`
 - Optional SME candidate log under `05-ai-factory/logs/`
+
+`process_intake.py` currently writes the candidate log on each intake run as a
+selective-review aid. The candidate log is not itself an SME Review Pack and
+does not require SME review unless the item is low-confidence, conflicted,
+critical, or otherwise important enough to escalate.
 
 ## Optional Selective SME Review
 

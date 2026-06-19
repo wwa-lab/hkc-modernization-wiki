@@ -18,7 +18,7 @@
 ## Engineering Team
 
 - Maintain repository standards.
-- Apply reviewed results into dictionaries and mapping candidates.
+- Apply reviewed results into supported dictionaries.
+- Treat mapping candidates as reserved/future outputs until a reviewed mapping workflow exists.
 - Resolve conflicts and open questions.
 - Keep LAN-folder references traceable.
-

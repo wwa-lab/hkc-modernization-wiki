@@ -6,7 +6,7 @@ This directory contains local MVP scripts.
 - `query_wiki.py` - answer natural language questions from `03-wiki/` and `source-document-index.json` with source pages and source materials.
 - `generate_review_pack.py` - optional selective SME Review Pack generation from candidate logs.
 - `review_candidates.py` - optional terminal review for selected candidate items.
-- `apply_reviewed_pack.py` - optional application of SME-confirmed reviewed results to JSON dictionaries and reports.
+- `apply_reviewed_pack.py` - optional application of SME-confirmed program and field review results to JSON dictionaries and reports.
 - `validate_repo.py` - validate repository structure, JSON syntax, wiki files, source index, reports, review-pack formatting, and status rules.
 
 The MVP uses only the Python standard library. It does not use Excel, pandas,
@@ -63,6 +63,9 @@ py -3 05-ai-factory\scripts\apply_reviewed_pack.py --reviewed-pack 05-ai-factory
 - Open questions: `03-wiki\questions\open-questions.md`
 - Conflicts: `03-wiki\questions\conflict-log.md`
 - Optional candidates JSON: `05-ai-factory\logs\<intake_id>-candidates.json`
+
+`process_intake.py` writes the optional candidates JSON automatically. The
+follow-on SME Review Pack and terminal review steps remain optional.
 
 ## Tests
 

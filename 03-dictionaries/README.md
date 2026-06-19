@@ -11,3 +11,11 @@ Current dictionary files:
 - `legacy-fields.json`
 - `legacy-jobs.json`
 
+Current apply support:
+
+- `apply_reviewed_pack.py` writes SME-confirmed `Program Review` items to
+  `legacy-programs.json`.
+- `apply_reviewed_pack.py` writes SME-confirmed `Field Review` items to
+  `legacy-fields.json`.
+- `legacy-files.json` and `legacy-jobs.json` are reserved dictionary surfaces
+  until file/job review application is implemented.
