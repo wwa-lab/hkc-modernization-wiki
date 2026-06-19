@@ -12,7 +12,21 @@ core-system design work can trust.
 
 ## Repository Purpose
 
-The repository supports this flow:
+The current MVP supports this implemented flow:
+
+```text
+intake JSON / inbox files / LAN references
+-> process_intake.py
+-> AI-organized wiki notes
+-> source index
+-> open questions / conflict log
+-> intake summary
+-> optional candidate log
+-> optional SME review pack and reviewed Markdown
+-> optional program/field dictionary updates
+```
+
+The next-phase target supports this flow:
 
 ```text
 raw project materials / SME knowledge
@@ -46,15 +60,26 @@ The next phase does not include:
 
 ## Source of Truth
 
-The current source of truth remains:
+The current implemented source of truth remains:
 
 - intake manifests: `05-ai-factory/intake/*.json`
-- prepared candidates: `05-ai-factory/logs/*-candidates.json`
-- SME Review Packs: `05-ai-factory/review-packs/*.md`
-- reviewed SME packs: `05-ai-factory/reviewed/*.md`
-- dictionaries: `03-dictionaries/*.json`
+- source registry: `07-references/source-document-index.json`
+- wiki notes and question logs: `03-wiki/**/*.md`
 - reports: `06-reports/*.md`
+- optional candidate logs: `05-ai-factory/logs/*-candidates.json`
+- optional SME Review Packs: `05-ai-factory/review-packs/*.md`
+- optional reviewed SME packs: `05-ai-factory/reviewed/*.md`
+- confirmed program and field dictionaries:
+  `03-dictionaries/legacy-programs.json` and
+  `03-dictionaries/legacy-fields.json`
+
+Reserved but not fully automated surfaces:
+
+- files and jobs dictionaries:
+  `03-dictionaries/legacy-files.json` and `03-dictionaries/legacy-jobs.json`
 - mapping candidates: `04-mappings/*.json`
+- prepared notes: `05-ai-factory/prepared-notes/*.md`
+- core-system input package: `06-reports/core-system-input-package.*`
 
 ## Design Principles
 
@@ -63,8 +88,9 @@ The current source of truth remains:
 - Keep the LAN folder as the raw evidence source of truth.
 - Store references and prepared notes, not uncontrolled copies of raw documents.
 - Do not write unreviewed AI output into final dictionaries or mappings.
-- Every candidate item must be traceable to source material IDs or prepared note IDs.
-- Every dictionary update must be based on an SME-reviewed decision.
+- Current candidate items must be traceable to source material IDs.
+- Future prepared-note candidates should also preserve prepared note IDs.
+- Every dictionary update must be based on an SME-reviewed A/B/C decision.
 - Future scripts must remain runnable on Windows with `py -3`.
 - Use Python standard library first unless a later approved design changes that
   constraint.
@@ -97,14 +123,16 @@ Example source material record:
 
 ```json
 {
-  "material_id": "MAT-...",
-  "intake_id": "HKC-INTAKE-...",
+  "material_id": "WIKI-MAT-...",
   "source_path": "\\\\LAN\\HKC\\...",
   "material_type": "meeting_notes|legacy_scan_summary|business_note|field_list",
   "owner": "SME|Tech|BA",
   "purpose": "Explain legacy order entry behavior.",
-  "registered_at": "YYYY-MM-DD",
-  "content_status": "Referenced Only"
+  "intake_id": "HKC-INTAKE-...",
+  "wiki_area": "legacy|data|overview|modernization|questions",
+  "wiki_status": "AI Organized|Need Clarification|Conflict",
+  "confidence": "Low|Medium|High",
+  "last_indexed": "YYYY-MM-DD"
 }
 ```
 
@@ -126,6 +154,12 @@ Purpose:
 
 Capture human-prepared or lightly agent-assisted notes that summarize relevant
 legacy knowledge in a form suitable for candidate generation.
+
+Implementation status:
+
+This is a next-phase convention. The current repo does not yet contain
+`05-ai-factory/prepared-notes/`, and the current candidate generator does not
+read prepared notes.
 
 Prepared notes can come from:
 
@@ -187,10 +221,17 @@ Convert prepared notes into structured, reviewable candidate items.
 Candidate generation may be manual, script-assisted, or LLM-assisted later, but
 the output contract remains the same.
 
+Current implementation:
+
+`process_intake.py` writes an optional candidate log for each intake from the
+intake manifest/source list. The current candidate content is mock extraction
+for selective SME review and does not consume prepared notes yet.
+
 Inputs:
 
 - intake ID
-- prepared notes
+- current: intake materials and source IDs
+- future: prepared notes
 - source material index
 - optional prompt or extraction version
 
@@ -221,7 +262,7 @@ Candidate item contract:
     "E": "Not Applicable / Not Correct"
   },
   "source_material_ids": ["MAT-..."],
-  "prepared_note_ids": ["NOTE-..."],
+  "prepared_note_ids": ["NOTE-... optional future field"],
   "review_status": "Pending Review"
 }
 ```
@@ -236,7 +277,7 @@ Rules:
 Current script:
 
 ```text
-05-ai-factory/scripts/process_intake.py
+05-ai-factory/scripts/process_intake.py (current optional candidate log writer)
 ```
 
 Possible future script:
@@ -281,11 +322,17 @@ Rules:
 
 Apply rules:
 
-- A writes the AI recommended answer to the relevant dictionary.
-- B writes the selected alternative answer to the relevant dictionary.
-- C writes the SME corrected answer to the relevant dictionary.
+- A writes the AI recommended answer to the relevant supported dictionary.
+- B writes the selected alternative answer to the relevant supported dictionary.
+- C writes the SME corrected answer to the relevant supported dictionary.
 - D writes an open question and does not update dictionaries.
 - E writes the review log and does not update dictionaries.
+
+Current implementation note:
+
+`apply_reviewed_pack.py` supports `Program Review` and `Field Review` items.
+Other review item types should be treated as future extension points until the
+apply script supports them.
 
 Current scripts:
 
@@ -302,13 +349,18 @@ Purpose:
 Store SME-confirmed legacy knowledge as machine-readable input for future core
 system work.
 
+Current implementation:
+
+The repository contains four dictionary JSON files, but the apply script
+currently writes only programs and fields.
+
 Outputs:
 
 ```text
-03-dictionaries/legacy-programs.json
-03-dictionaries/legacy-files.json
-03-dictionaries/legacy-fields.json
-03-dictionaries/legacy-jobs.json
+03-dictionaries/legacy-programs.json   current apply target
+03-dictionaries/legacy-fields.json     current apply target
+03-dictionaries/legacy-files.json      reserved
+03-dictionaries/legacy-jobs.json       reserved
 ```
 
 Rules:
@@ -328,6 +380,10 @@ Package reviewed legacy knowledge into a form that new core-system design teams
 can consume.
 
 This is the key next-phase output of this repository.
+
+Implementation status:
+
+No `core-system-input-package` artifact or generator exists yet.
 
 Possible package contents:
 
@@ -368,6 +424,11 @@ Purpose:
 
 Support later target mapping and draft SDD work after enough reviewed knowledge
 exists.
+
+Implementation status:
+
+The mapping JSON files exist as empty/reserved candidate surfaces. No current
+script generates or applies mapping candidates.
 
 Inputs:
 

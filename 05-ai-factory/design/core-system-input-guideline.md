@@ -29,7 +29,19 @@ It should not become:
 
 ## Working Model
 
-Use this repository to move information through five controlled states:
+The current MVP supports this implemented flow:
+
+```text
+Referenced
+-> Auto Wiki Intake
+-> AI Organized wiki notes
+-> optional candidate log
+-> optional SME Review Pack
+-> optional reviewed Markdown
+-> confirmed program/field dictionaries and review reports
+```
+
+The next-phase target is to move information through five controlled states:
 
 ```text
 Referenced
@@ -42,10 +54,10 @@ Referenced
 Each state should have a clear artifact:
 
 - Referenced: `07-references/source-document-index.json`
-- Prepared: `05-ai-factory/prepared-notes/*.md`
+- Prepared: `05-ai-factory/prepared-notes/*.md` (future convention; directory not implemented yet)
 - Candidate: `05-ai-factory/logs/*-candidates.json`
 - SME Reviewed: `05-ai-factory/reviewed/*.md`
-- Core-System Input: `06-reports/core-system-input-package.*`
+- Core-System Input: `06-reports/core-system-input-package.*` (future output; no generator yet)
 
 ## Manual vs Agent Work
 
@@ -60,19 +72,22 @@ Manual work:
 Agent-assisted work:
 
 - normalize intake data
-- generate candidate review items
+- generate candidate review items into `05-ai-factory/logs/*-candidates.json`
 - generate Markdown SME Review Packs
 - run terminal review flow
-- apply reviewed Markdown into dictionaries and reports
+- apply reviewed Markdown into program and field dictionaries plus review reports
 - validate repository artifacts
-- generate draft input packages for review
+- generate draft input packages for review (future)
 
 Agent output must remain reviewable and traceable.
 
 ## Prepared Notes Guideline
 
-Prepared notes are the preferred bridge between raw materials and reviewable
-candidates.
+Prepared notes are the intended next-phase bridge between raw materials and
+reviewable candidates. The current MVP does not yet have a
+`05-ai-factory/prepared-notes/` directory or a generator that reads prepared
+notes; `process_intake.py` currently reads intake manifests, inbox files, or
+explicit source references.
 
 Good prepared notes:
 
@@ -130,6 +145,12 @@ E must create review log entries and stay out of dictionaries.
 
 Dictionaries store confirmed legacy knowledge.
 
+Current implementation note: `apply_reviewed_pack.py` writes only
+`Program Review` items to `03-dictionaries/legacy-programs.json` and
+`Field Review` items to `03-dictionaries/legacy-fields.json`. The files and jobs
+dictionaries exist as reserved JSON surfaces, but the apply script does not
+currently update them.
+
 Dictionary entries should include:
 
 - stable legacy object ID
@@ -147,6 +168,9 @@ Do not write unreviewed candidate content to dictionaries.
 
 Core-system input packages should help future design teams understand what has
 been confirmed and what remains unresolved.
+
+This is a next-phase output. There is no current
+`06-reports/core-system-input-package.*` artifact or generator script.
 
 Recommended package sections:
 

@@ -48,7 +48,9 @@ Materials/LAN references/inbox files
 
 Auto Wiki Intake writes concise Markdown notes under `03-wiki/`, updates
 `07-references/source-document-index.json`, and generates
-`06-reports/latest-intake-summary.md`.
+`06-reports/latest-intake-summary.md`. It also writes an optional SME candidate
+log under `05-ai-factory/logs/`; generating a candidate log does not make SME
+review part of the default mainline.
 
 ## Optional SME Review
 

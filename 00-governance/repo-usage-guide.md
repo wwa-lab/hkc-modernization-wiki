@@ -3,9 +3,9 @@
 This repository is `hkc-modernization-wiki`, a lightweight Agent-readable
 knowledge base for HKC modernization discovery.
 
-Use it to maintain Markdown wiki notes, source indexes, dictionaries, mapping
-candidates, optional review packs, reviewed results, reports, references, and
-decisions.
+Use it to maintain Markdown wiki notes, source indexes, dictionaries, reserved
+mapping candidate files, optional review packs, reviewed results, reports,
+references, and decisions.
 
 Do not use it as the raw document repository. The LAN folder remains the source
 of truth for raw source documents and project evidence.

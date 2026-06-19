@@ -3,8 +3,8 @@
 Status: Draft
 
 This test plan verifies that the repository can support an end-to-end flow from
-sample intake to reviewed core-system input artifacts without real LAN folder
-integration, real LLM APIs, RPG parsing, databases, Excel, or Web UI.
+sample intake to reviewed wiki, dictionary, and report artifacts without real
+LAN folder integration, real LLM APIs, RPG parsing, databases, Excel, or Web UI.
 
 ## Test Objectives
 
@@ -43,6 +43,9 @@ py -3 --version
 ```
 
 ## Test Data
+
+For internal pilots using real source references and controlled notes, use
+`05-ai-factory/design/real-scenario-test-guideline.md`.
 
 Primary sample intake:
 
@@ -92,7 +95,8 @@ Expected:
 - candidates contain Program Review and Field Review items
 - candidates contain low-confidence examples for Need Discussion and Not
   Applicable / Not Correct paths
-- every candidate has source material IDs and `Pending Review` status
+- every candidate has source material IDs and uses `AI Organized` or
+  `Need Clarification` until explicit SME action
 
 Pass criteria:
 
@@ -344,7 +348,7 @@ py -3 -m unittest discover -s 05-ai-factory\tests
 Expected:
 
 ```text
-Ran 7 tests
+Ran 9 tests
 OK
 ```
 
